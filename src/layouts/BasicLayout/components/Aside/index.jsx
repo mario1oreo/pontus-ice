@@ -26,10 +26,10 @@ function BasicLayout(props) {
         <Notify className={styles.notify} />
         <div className={styles.userProfile}>
           <span className={styles.userName}>
-            淘小宝
+            快要秃顶的码农
           </span>
           <br />
-          <span className={styles.userDepartment}>技术部</span>
+          <span className={styles.userDepartment}>搬砖岗</span>
         </div>
       </div>
 
