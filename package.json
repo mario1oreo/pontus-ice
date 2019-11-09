@@ -7,6 +7,7 @@
     "@alifd/next": "^1.x",
     "@antv/data-set": "^0.9.5",
     "@icedesign/container": "^1.x",
+    "@icedesign/data-binder": "^1.0.5",
     "@icedesign/form-binder": "^1.x",
     "@icedesign/foundation-symbol": "^1.x",
     "@icedesign/img": "^1.x",
@@ -17,7 +18,7 @@
     "lodash.clonedeep": "^4.5.0",
     "moment": "^2.24.0",
     "prop-types": "^15.5.8",
-    "react": "^16.2.0",
+    "react": "latest",
     "react-dom": "^16.4.1",
     "react-router-dom": "^5.0.1"
   },
