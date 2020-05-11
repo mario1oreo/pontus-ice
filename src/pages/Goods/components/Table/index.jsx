@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Table, Pagination, Button, Dialog } from '@alifd/next';
+import React, {useState, useEffect, useCallback} from 'react';
+import {Table, Pagination, Message, Button, Dialog} from '@alifd/next';
 import IceContainer from '@icedesign/container';
 import Filter from '../Filter';
 import styles from './index.module.scss';
+import {queryGoodsInfoList} from '../../../../api/index'
 
 // Random Numbers
 const random = (min, max) => {
@@ -10,18 +11,18 @@ const random = (min, max) => {
 };
 
 // MOCK 数据，实际业务按需进行替换
-const getData = (length = 10) => {
-  return Array.from({ length }).map(() => {
-    return {
-      name: ['蓝牙音箱', '天猫精灵', '智能机器人'][random(0, 2)],
-      cate: ['数码', '智能'][random(0, 1)],
-      tag: ['新品', '预售'][random(0, 1)],
-      store: ['余杭店', '滨江店', '西湖店'][random(0, 2)],
-      sales: random(1000, 2000),
-      service: ['可预约', '可体验'][random(0, 1)],
-    };
-  });
-};
+// const getData = (length = 10) => {
+//   return Array.from({length}).map(() => {
+//     return {
+//       productName: ['蓝牙音箱', '天猫精灵', '智能机器人'][random(0, 2)],
+//       productCategoryTwo: ['数码', '智能'][random(0, 1)],
+//       tag: ['新品', '预售'][random(0, 1)],
+//       store: ['余杭店', '滨江店', '西湖店'][random(0, 2)],
+//       sales: random(1000, 2000),
+//       service: ['可预约', '可体验'][random(0, 1)],
+//     };
+//   });
+// };
 
 export default function GoodsTable() {
   const [current, setCurrent] = useState(1);
@@ -32,25 +33,27 @@ export default function GoodsTable() {
     fetchData();
   }, []);
 
-  const mockApi = (len) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(getData(len));
-      }, 600);
-    });
+
+
+  const fetchData = async (currentPage) => {
+    setLoading(true);
+    const params = {"currentPage": currentPage}
+    const result = await queryGoodsInfoList(params);
+    console.log("queryGoodsInfoList succeed!");
+    if (result.data != null ) {
+      setData(result.data);
+      setLoading(false);
+    } else {
+      console.log('查询失败！');
+      Message.error('提交失败! ' + result.data.message);
+    }
   };
 
-  const fetchData = useCallback((len) => {
-    setLoading(true);
-    mockApi(len).then((mockData) => {
-      setData(mockData);
-      setLoading(false);
-    });
-  });
-
   const handlePaginationChange = async (currentPage) => {
+    console.log("currentPage" + currentPage);
+
     await setCurrent(currentPage);
-    fetchData();
+    fetchData(currentPage);
   };
 
   const handleFilterChange = () => {
@@ -94,16 +97,24 @@ export default function GoodsTable() {
   return (
     <div className={styles.container}>
       <IceContainer>
-        <Filter onChange={handleFilterChange} />
+        <Filter onChange={handleFilterChange}/>
       </IceContainer>
       <IceContainer>
         <Table loading={isLoading} dataSource={data} hasBorder={false}>
-          <Table.Column title="商品名称" dataIndex="name" />
-          <Table.Column title="商品分类" dataIndex="cate" />
-          <Table.Column title="商品标签" dataIndex="tag" />
-          <Table.Column title="在售门店" dataIndex="store" />
-          <Table.Column title="总销量" dataIndex="sales" />
-          <Table.Column title="商品服务" dataIndex="service" />
+          <Table.Column title="商品ID" dataIndex="productId"/>
+          <Table.Column title="条形码" dataIndex="barCode"/>
+          <Table.Column title="商品名称" dataIndex="productName"/>
+          <Table.Column title="商品数量" dataIndex="productQuantity"/>
+          <Table.Column title="计数单位" dataIndex="productUnit"/>
+          <Table.Column title="一级类别" dataIndex="productCategoryOne"/>
+          <Table.Column title="二级类别" dataIndex="productCategoryTwo"/>
+          <Table.Column title="三级类别" dataIndex="productCategoryThr"/>
+          <Table.Column title="产品颜色" dataIndex="formatColourName"/>
+          <Table.Column title="产品尺码" dataIndex="formatSizeCode"/>
+          <Table.Column title="产品规格" dataIndex="formatCode"/>
+          <Table.Column title="出售价格" dataIndex="salePrice"/>
+          <Table.Column title="成本价格" dataIndex="costPrice"/>
+          <Table.Column title="商品描述信息" dataIndex="description"/>
           <Table.Column
             title="操作"
             width={200}

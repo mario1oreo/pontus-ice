@@ -11,6 +11,7 @@
     "@icedesign/form-binder": "^1.x",
     "@icedesign/foundation-symbol": "^1.x",
     "@icedesign/img": "^1.x",
+    "@icedesign/label": "^1.0.6",
     "@icedesign/layout": "^1.x",
     "@icedesign/theme": "^1.x",
     "bizcharts": "^3.2.2",
@@ -18,6 +19,7 @@
     "lodash.clonedeep": "^4.5.0",
     "moment": "^2.24.0",
     "prop-types": "^15.5.8",
+    "rc-color-picker": "^1.2.6",
     "react": "latest",
     "react-dom": "^16.4.1",
     "react-router-dom": "^5.0.1"

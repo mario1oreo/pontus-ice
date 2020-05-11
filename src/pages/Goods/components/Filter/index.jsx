@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { Grid, Input, Select } from '@alifd/next';
 import {
   FormBinderWrapper as IceFormBinderWrapper,
@@ -6,16 +6,32 @@ import {
   FormError as IceFormError,
 } from '@icedesign/form-binder';
 import styles from './index.module.scss';
-
+import {addGoodsInfo,getGoodsOptions} from '../../../../api/index';
 const { Row, Col } = Grid;
 
 export default function Filter(props) {
   const [value] = useState({});
+  const [optionsLevel2, setOptionsLevel2] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const formChange = (formValue) => {
     props.onChange(formValue);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      await setLoading(true);
+      try {
+        const result = await getGoodsOptions();
+        console.log({result});
+        await setOptionsLevel2(result.data.optionsLevel2);
+      } catch (err) {
+        console.log({err});
+      }
+      await setLoading(false);
+    };
 
+    fetchData();
+  }, []);
   return (
     <IceFormBinderWrapper
       value={value}
@@ -25,41 +41,27 @@ export default function Filter(props) {
         <Col l="6">
           <div className={styles.formItem}>
             <span className={styles.formLabel}>商品名称：</span>
-            <IceFormBinder triggerType="onBlur" name="name">
+            <IceFormBinder triggerType="onBlur" name="productName">
               <Input placeholder="请输入" className={styles.input} />
             </IceFormBinder>
             <div className={styles.formError}>
-              <IceFormError name="name" />
+              <IceFormError name="productName" />
             </div>
           </div>
         </Col>
         <Col l="6">
           <div className={styles.formItem}>
             <span className={styles.formLabel}>商品分类：</span>
-            <IceFormBinder triggerType="onBlur" name="cate">
-              <Select className={styles.input}>
-                <Select.Option value="1">智能</Select.Option>
-                <Select.Option value="2">数码</Select.Option>
-                <Select.Option value="3">新品</Select.Option>
-              </Select>
+            <IceFormBinder triggerType="onBlur" name="productCategoryTwo">
+              <Select
+                showSearch
+                placeholder="请选择"
+                className={styles.goodsName}
+                dataSource={optionsLevel2}
+              />
             </IceFormBinder>
             <div className={styles.formError}>
-              <IceFormError name="cate" />
-            </div>
-          </div>
-        </Col>
-        <Col l="6">
-          <div className={styles.formItem}>
-            <span className={styles.formLabel}>归属门店：</span>
-            <IceFormBinder triggerType="onBlur" name="store">
-              <Select className={styles.input}>
-                <Select.Option value="1">余杭店</Select.Option>
-                <Select.Option value="2">滨江店</Select.Option>
-                <Select.Option value="3">西湖店</Select.Option>
-              </Select>
-            </IceFormBinder>
-            <div className={styles.formError}>
-              <IceFormError name="store" />
+              <IceFormError name="productCategoryTwo" />
             </div>
           </div>
         </Col>
